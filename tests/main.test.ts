@@ -40,7 +40,7 @@ jest.mock('@actions/http-client', () => ({
 
 let capturedParams: CapturedParams = {};
 
-const setInputs = function(data: any) {
+const setInputs = function (data: any) {
     const getInput = jest.fn().mockImplementation((name, params = {}) => {
         return data[name] || '';
     });
@@ -52,10 +52,28 @@ beforeEach(() => {
 });
 
 test("should send a deployment event", async () => {
-    const testData = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'testdata', 'send_deployment_event.golden.json'), 'utf8'));
-
-    const { input, expected } = testData;
+    const input = {
+        "componentid": 1,
+        "message": "test",
+        "type": "deployment",
+        "canary": "false"
+    };
     setInputs(input);
+
+    const expected = {
+        "data": {
+            "payload": {
+                "message": "test"
+            },
+            "sourceEventID": "65f77048-e68a-49c6-bb68-aadeedb4efe4",
+            "type": "deployment",
+            "startTime": "2025-02-26T13:50:20.386Z",
+            "componentID": 1
+        },
+        "options": {
+            "Authorization": "Bearer token"
+        }
+    };
 
     try {
         await run();
@@ -74,9 +92,15 @@ test("should send a deployment event", async () => {
 });
 
 test("invalid event type should throw an error", async () => {
-    const testData = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'testdata', 'invalid_event_type.golden.json'), 'utf8'));
-
-    const { input, expected } = testData;
+    const input = {
+        "input": {
+            "componentid": 1,
+            "message": "test",
+            "type": "invalid",
+            "canary": "false"
+        },
+        "expected": {}
+    };
     setInputs(input);
 
     try {
