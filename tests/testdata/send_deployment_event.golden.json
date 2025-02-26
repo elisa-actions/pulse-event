@@ -1,0 +1,22 @@
+{
+  "input": {
+    "componentid": 1,
+    "message": "test",
+    "type": "deployment",
+    "canary": "false"
+  },
+  "expected": {
+    "data": {
+      "payload": {
+        "message": "test"
+      },
+      "sourceEventID": "",
+      "type": "deployment",
+      "startTime": "",
+      "componentID": 1
+    },
+    "options": {
+      "Authorization": "Bearer token"
+    }
+  }
+}
