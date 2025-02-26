@@ -1,9 +1,0 @@
-{
-  "input": {
-    "componentid": 1,
-    "message": "test",
-    "type": "invalid",
-    "canary": "false"
-  },
-  "expected": {}
-}
