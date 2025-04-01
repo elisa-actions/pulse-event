@@ -70,7 +70,17 @@ const sendEvent = (baseUrl, canary, token, event) => __awaiter(void 0, void 0, v
         }
         catch (error) {
             retryCount++;
-            core.info(`Sending event failed: ${error.message}, retrying (${retryCount}/${maxRetries})`);
+            let errorMessage = 'Unknown error';
+            if (error instanceof http_client_1.HttpClientError) {
+                errorMessage = `${error.message} (Status: ${error.statusCode})`;
+            }
+            else if (error instanceof Error) {
+                errorMessage = error.message;
+            }
+            else if (typeof error === 'string') {
+                errorMessage = error;
+            }
+            core.info(`Sending event failed: ${errorMessage}, retrying (${retryCount}/${maxRetries})`);
             const delay = Math.pow(2, retryCount) * 1000;
             yield new Promise(resolve => setTimeout(resolve, delay));
         }
@@ -116,11 +126,9 @@ function run() {
         }
     });
 }
-;
 if (!process.env.JEST_WORKER_ID) {
     run();
 }
-;
 module.exports = run;
 
 
