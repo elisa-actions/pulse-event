@@ -2,7 +2,7 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
 /***/ 5915:
-/***/ (function(module, exports, __nccwpck_require__) {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
@@ -104,7 +104,7 @@ function run() {
             }
             const event = {
                 payload: {
-                    message: message
+                    message
                 },
                 sourceEventID: eventId,
                 type: eventType,
@@ -129,7 +129,7 @@ function run() {
 if (!process.env.JEST_WORKER_ID) {
     run();
 }
-module.exports = run;
+exports["default"] = run;
 
 
 /***/ }),

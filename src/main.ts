@@ -90,7 +90,7 @@ async function run(): Promise<void> {
 
     const event: Event = {
       payload: {
-        message: message
+        message
       },
       sourceEventID: eventId,
       type: eventType,
@@ -118,4 +118,4 @@ if (!process.env.JEST_WORKER_ID) {
   run()
 }
 
-module.exports = run
+export default run
