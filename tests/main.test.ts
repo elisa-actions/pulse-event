@@ -1,10 +1,5 @@
-const fs = require('fs');
-const path = require('path');
-const { HttpClientResponse, HttpCodes } = require('@actions/http-client');
-
 const core = require('@actions/core');
-const run = require('../src/main');
-const apiUrl = 'https://pulse.csf.elisa.fi/v1/components/1/events';
+import run from '../src/main';
 
 type CapturedParams = {
     url?: string;
