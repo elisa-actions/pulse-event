@@ -37,7 +37,7 @@
     "@types/uuid": "^10.0.0",
     "@typescript-eslint/parser": "^8.44.0",
     "@vercel/ncc": "^0.38.4",
-    "eslint": "^9.35.0",
+    "eslint": "^9.36.0",
     "eslint-plugin-github": "github:github/eslint-plugin-github",
     "globals": "^16.4.0",
     "jest": "^30.1.3",
