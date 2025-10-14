@@ -1,7 +1,11 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} **/
+
+const { createJsWithTsPreset } = require('ts-jest');
+
+const presetConfig = createJsWithTsPreset();
+
 module.exports = {
+  ...presetConfig,
   testEnvironment: "node",
-  transform: {
-    "^.+\.tsx?$": ["ts-jest",{}],
-  },
+  transformIgnorePatterns: ['node_modules/(?!uuid)'],
 };
