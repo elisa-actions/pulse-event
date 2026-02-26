@@ -47,7 +47,7 @@ jobs:
         if: ${{ failure() && steps.diff.conclusion == 'failure' }}
         run: git restore dist/
 
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         if: ${{ failure() && steps.diff.conclusion == 'failure' }}
         with:
           name: dist
