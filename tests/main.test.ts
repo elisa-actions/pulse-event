@@ -1,5 +1,6 @@
 const core = require('@actions/core')
 import run from '../src/main'
+import {beforeEach, expect, jest, test} from '@jest/globals';
 
 type CapturedParams = {
   url?: string
@@ -8,7 +9,7 @@ type CapturedParams = {
 }
 
 jest.mock('@actions/core', () => ({
-  ...jest.requireActual('@actions/core'),
+  ...(jest.requireActual('@actions/core') as object),
   setFailed: jest.fn().mockImplementation(message => {
     console.log('core.setFailed called:', message)
   }),
@@ -17,7 +18,7 @@ jest.mock('@actions/core', () => ({
 jest.mock('@actions/http-client', () => ({
   HttpClient: jest.fn().mockImplementation(() => ({
     post: jest.fn().mockImplementation((url, data, options) => {
-      capturedParams = {url, data, options}
+      capturedParams = {url: url as string, data, options}
       const response: any = {
         message: {
           statusCode: 200,
@@ -26,7 +27,7 @@ jest.mock('@actions/http-client', () => ({
           }
         },
         readBody: jest
-          .fn()
+          .fn<() => Promise<string>>()
           .mockResolvedValue(JSON.stringify({message: 'success'}))
       }
 
@@ -38,8 +39,8 @@ jest.mock('@actions/http-client', () => ({
 let capturedParams: CapturedParams = {}
 
 const setInputs = function (data: any) {
-  const getInput = jest.fn().mockImplementation((name, params = {}) => {
-    return data[name] || ''
+  const getInput = jest.fn().mockImplementation((name: unknown) => {
+    return data[name as string] || ''
   })
   core.getInput = getInput
 }
