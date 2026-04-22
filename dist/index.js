@@ -51,7 +51,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(7484));
 const http_client_1 = __nccwpck_require__(4844);
-const uuid_1 = __nccwpck_require__(764);
+const uuid_1 = __nccwpck_require__(7339);
 const sendEvent = (baseUrl, canary, token, event) => __awaiter(void 0, void 0, void 0, function* () {
     const maxRetries = 3;
     let retryCount = 0;
@@ -31682,7 +31682,7 @@ module.exports = require("util");
 
 /***/ }),
 
-/***/ 764:
+/***/ 7339:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __nccwpck_require__) => {
 
 "use strict";
@@ -31771,18 +31771,10 @@ function stringify(arr, offset = 0) {
 }
 /* harmony default export */ const dist_node_stringify = (stringify);
 
-// EXTERNAL MODULE: external "node:crypto"
-var external_node_crypto_ = __nccwpck_require__(7598);
 ;// CONCATENATED MODULE: ./node_modules/uuid/dist-node/rng.js
-
-const rnds8Pool = new Uint8Array(256);
-let poolPtr = rnds8Pool.length;
+const rnds8 = new Uint8Array(16);
 function rng() {
-    if (poolPtr > rnds8Pool.length - 16) {
-        (0,external_node_crypto_.randomFillSync)(rnds8Pool);
-        poolPtr = 0;
-    }
-    return rnds8Pool.slice(poolPtr, (poolPtr += 16));
+    return crypto.getRandomValues(rnds8);
 }
 
 ;// CONCATENATED MODULE: ./node_modules/uuid/dist-node/v1.js
@@ -31882,6 +31874,8 @@ function _v1ToV6(v1Bytes) {
     return Uint8Array.of(((v1Bytes[6] & 0x0f) << 4) | ((v1Bytes[7] >> 4) & 0x0f), ((v1Bytes[7] & 0x0f) << 4) | ((v1Bytes[4] & 0xf0) >> 4), ((v1Bytes[4] & 0x0f) << 4) | ((v1Bytes[5] & 0xf0) >> 4), ((v1Bytes[5] & 0x0f) << 4) | ((v1Bytes[0] & 0xf0) >> 4), ((v1Bytes[0] & 0x0f) << 4) | ((v1Bytes[1] & 0xf0) >> 4), ((v1Bytes[1] & 0x0f) << 4) | ((v1Bytes[2] & 0xf0) >> 4), 0x60 | (v1Bytes[2] & 0x0f), v1Bytes[3], v1Bytes[8], v1Bytes[9], v1Bytes[10], v1Bytes[11], v1Bytes[12], v1Bytes[13], v1Bytes[14], v1Bytes[15]);
 }
 
+// EXTERNAL MODULE: external "node:crypto"
+var external_node_crypto_ = __nccwpck_require__(7598);
 ;// CONCATENATED MODULE: ./node_modules/uuid/dist-node/md5.js
 
 function md5(bytes) {
@@ -31924,7 +31918,10 @@ function v35(version, hash, value, namespace, buf, offset) {
     bytes[6] = (bytes[6] & 0x0f) | version;
     bytes[8] = (bytes[8] & 0x3f) | 0x80;
     if (buf) {
-        offset = offset || 0;
+        offset ??= 0;
+        if (offset < 0 || offset + 16 > buf.length) {
+            throw new RangeError(`UUID byte range ${offset}:${offset + 15} is out of buffer bounds`);
+        }
         for (let i = 0; i < 16; ++i) {
             buf[offset + i] = bytes[i];
         }
@@ -31944,14 +31941,15 @@ v3.DNS = DNS;
 v3.URL = URL;
 /* harmony default export */ const dist_node_v3 = (v3);
 
-;// CONCATENATED MODULE: ./node_modules/uuid/dist-node/native.js
-
-/* harmony default export */ const dist_node_native = ({ randomUUID: external_node_crypto_.randomUUID });
-
 ;// CONCATENATED MODULE: ./node_modules/uuid/dist-node/v4.js
 
 
-
+function v4(options, buf, offset) {
+    if (!buf && !options && crypto.randomUUID) {
+        return crypto.randomUUID();
+    }
+    return _v4(options, buf, offset);
+}
 function _v4(options, buf, offset) {
     options = options || {};
     const rnds = options.random ?? options.rng?.() ?? rng();
@@ -31971,12 +31969,6 @@ function _v4(options, buf, offset) {
         return buf;
     }
     return unsafeStringify(rnds);
-}
-function v4(options, buf, offset) {
-    if (dist_node_native.randomUUID && !buf && !options) {
-        return dist_node_native.randomUUID();
-    }
-    return _v4(options, buf, offset);
 }
 /* harmony default export */ const dist_node_v4 = (v4);
 
@@ -32014,6 +32006,9 @@ function v6(options, buf, offset) {
     let bytes = dist_node_v1({ ...options, _v6: true }, new Uint8Array(16));
     bytes = v1ToV6(bytes);
     if (buf) {
+        if (offset < 0 || offset + 16 > buf.length) {
+            throw new RangeError(`UUID byte range ${offset}:${offset + 15} is out of buffer bounds`);
+        }
         for (let i = 0; i < 16; i++) {
             buf[offset + i] = bytes[i];
         }
