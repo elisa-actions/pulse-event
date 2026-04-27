@@ -25,7 +25,7 @@
   "author": "elisasre",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^2.0.2",
+    "@actions/core": "^3.0.1",
     "@actions/http-client": "^3.0.2",
     "@jest/globals": "^30.3.0",
     "ts-jest": "^29.4.9",
