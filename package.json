@@ -41,7 +41,7 @@
     "@vercel/ncc": "^0.38.4",
     "eslint": "^9.39.2",
     "eslint-plugin-github": "github:github/eslint-plugin-github",
-    "globals": "^17.6.0",
+    "globals": "^17.7.0",
     "js-yaml": "^4.2.0",
     "prettier": "^3.8.4",
     "typescript": "^6.0.3",
