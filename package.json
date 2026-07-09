@@ -43,7 +43,7 @@
     "eslint-plugin-github": "github:github/eslint-plugin-github",
     "globals": "^17.7.0",
     "js-yaml": "^5.2.1",
-    "prettier": "^3.9.4",
+    "prettier": "^3.9.5",
     "typescript": "^6.0.3",
     "uuid": "^14.0.1"
   }
