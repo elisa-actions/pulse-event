@@ -28,7 +28,7 @@
     "@actions/core": "^2.0.2",
     "@actions/http-client": "^3.0.2",
     "@jest/globals": "^30.4.1",
-    "ts-jest": "^29.4.11",
+    "ts-jest": "^29.4.12",
     "uuid": "^14.0.1"
   },
   "devDependencies": {
