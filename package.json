@@ -29,7 +29,7 @@
     "@actions/http-client": "^3.0.2",
     "@jest/globals": "^30.4.1",
     "ts-jest": "^29.4.12",
-    "uuid": "^14.0.1"
+    "uuid": "^14.0.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.6",
@@ -45,6 +45,6 @@
     "prettier": "^3.9.6",
     "js-yaml": "^5.3.0",
     "typescript": "^6.0.3",
-    "uuid": "^14.0.1"
+    "uuid": "^14.0.2"
   }
 }
