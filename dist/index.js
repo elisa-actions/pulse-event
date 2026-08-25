@@ -32101,14 +32101,18 @@ function v1Bytes(rnds, msecs, nsecs, clockseq, node, buf, offset = 0) {
     msecs ??= Date.now();
     nsecs ??= 0;
     clockseq ??= ((rnds[8] << 8) | rnds[9]) & 0x3fff;
-    node ??= rnds.slice(10, 16);
+    if (node == null) {
+        node = rnds.slice(10, 16);
+        node[0] |= 0x01;
+    }
     msecs += 12219292800000;
-    const tl = ((msecs & 0xfffffff) * 10000 + nsecs) % 0x100000000;
+    const t = (msecs & 0xfffffff) * 10000 + nsecs;
+    const tl = t >>> 0;
     buf[offset++] = (tl >>> 24) & 0xff;
     buf[offset++] = (tl >>> 16) & 0xff;
     buf[offset++] = (tl >>> 8) & 0xff;
     buf[offset++] = tl & 0xff;
-    const tmh = ((msecs / 0x100000000) * 10000) & 0xfffffff;
+    const tmh = (((msecs / 0x10000000) | 0) * 625 + ((t / 0x100000000) | 0)) & 0xfffffff;
     buf[offset++] = (tmh >>> 8) & 0xff;
     buf[offset++] = tmh & 0xff;
     buf[offset++] = ((tmh >>> 24) & 0xf) | 0x10;
@@ -32311,7 +32315,7 @@ function updateV7State(state, now, rnds) {
     state.msecs ??= -Infinity;
     state.seq ??= 0;
     if (now > state.msecs) {
-        state.seq = (rnds[6] << 23) | (rnds[7] << 16) | (rnds[8] << 8) | rnds[9];
+        state.seq = v7Sequence(rnds);
         state.msecs = now;
     }
     else {
@@ -32336,7 +32340,7 @@ function v7Bytes(rnds, msecs, seq, buf, offset = 0) {
         }
     }
     msecs ??= Date.now();
-    seq ??= ((rnds[6] * 0x7f) << 24) | (rnds[7] << 16) | (rnds[8] << 8) | rnds[9];
+    seq ??= v7Sequence(rnds);
     buf[offset++] = (msecs / 0x10000000000) & 0xff;
     buf[offset++] = (msecs / 0x100000000) & 0xff;
     buf[offset++] = (msecs / 0x1000000) & 0xff;
@@ -32354,6 +32358,9 @@ function v7Bytes(rnds, msecs, seq, buf, offset = 0) {
     buf[offset++] = rnds[14];
     buf[offset++] = rnds[15];
     return buf;
+}
+function v7Sequence(rnds) {
+    return ((rnds[6] & 0x7f) << 24) | (rnds[7] << 16) | (rnds[8] << 8) | rnds[9];
 }
 /* harmony default export */ const dist_node_v7 = (v7);
 
